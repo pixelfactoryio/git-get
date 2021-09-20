@@ -57,6 +57,7 @@ func New(rawRepoURL string) (*Repo, error) {
 	return r, nil
 }
 
+// /(?:git|ssh|https?|git@[-\w.]+):(\/\/)?(.*?)(\.git)(\/?|\#[-\d\w._]+?)$/
 func isValidScheme(rawRepoURL string) (bool, error) {
 	for _, t := range transports {
 		re := fmt.Sprintf("(?m)^%s", regexp.QuoteMeta(t))
