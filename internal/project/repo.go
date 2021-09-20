@@ -17,7 +17,7 @@ var (
 )
 
 // ProjectRepository interface
-type ProjectRepository interface {
+type ProjectCloner interface {
 	Clone(name *Repo) (string, error)
 }
 
