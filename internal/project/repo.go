@@ -16,8 +16,8 @@ var (
 	gitUrlRe = regexp.MustCompile(`(?m)(?:^git|^ssh|^https?|^git\+ssh|^git@[-\w.]+):(\/\/)?(.*?)(\.git)(\/?|\#[-\d\w._]+?)$`)
 )
 
-// ProjectRepository interface
-type ProjectCloner interface {
+// Cloner interface
+type Cloner interface {
 	Clone(name *Repo) (string, error)
 }
 

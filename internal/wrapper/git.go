@@ -15,7 +15,7 @@ import (
 
 type gitCmd struct{}
 
-func NewGitWrapper() project.ProjectCloner {
+func NewGitWrapper() project.Cloner {
 	return &gitCmd{}
 }
 
