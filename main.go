@@ -16,7 +16,6 @@ func main() {
 		if errors.As(err, &ee) {
 			os.Exit(int(ee.Code()))
 		}
-
 		os.Exit(1)
 	}
 }

@@ -1,10 +1,11 @@
-package repo_test
+package project_test
 
 import (
 	"testing"
 
-	"github.com/pixelfactoryio/git-get/pkg/repo"
 	"github.com/stretchr/testify/require"
+
+	"github.com/pixelfactoryio/git-get/internal/project"
 )
 
 var tests []Test
@@ -14,7 +15,7 @@ type Test struct {
 	gitHost     string // parsed host
 	projectPath string // parsed project path
 	projectName string // parsed project name
-	parsedURL   string // parsed project url
+	parsedURL   string // parsed project url (if empty will default to in value)
 	isValid     bool   // is valid scheme
 }
 
@@ -41,8 +42,6 @@ func Test_New(t *testing.T) {
 	tests = []Test{
 		newTest("http://githost.com/path/to/repo.git", "githost.com", "path/to", "repo", "", true),
 		newTest("https://githost.com/path/to/repo.git", "githost.com", "path/to", "repo", "", true),
-		newTest("ftp://githost.com/path/to/repo.git", "githost.com", "path/to", "repo", "", true),
-		newTest("ftps://githost.com/path/to/repo.git", "githost.com", "path/to", "repo", "", true),
 		newTest("ssh://git@githost.com/path/to/repo.git", "githost.com", "path/to", "repo", "", true),
 		newTest("git+ssh://git@githost.com/path/to/repo.git", "githost.com", "path/to", "repo", "", true),
 		newTest("git@githost.com:path/to/repo.git", "githost.com", "path/to", "repo", "ssh://git@githost.com/path/to/repo.git", true),
@@ -51,7 +50,7 @@ func Test_New(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		r, err := repo.New(tt.in)
+		r, err := project.New(tt.in, "/tmp")
 
 		if !tt.isValid {
 			is.Empty(r)
