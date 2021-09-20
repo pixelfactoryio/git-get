@@ -31,8 +31,8 @@ func NewRootCmd() (*cobra.Command, error) {
 		RunE:          start,
 	}
 
-	rootCmd.PersistentFlags().String("src-path", "", "source directory path")
-	err := viper.BindPFlag("src-path", rootCmd.PersistentFlags().Lookup("src-path"))
+	rootCmd.PersistentFlags().String("projects-path", "", "source directory path")
+	err := viper.BindPFlag("projects-path", rootCmd.PersistentFlags().Lookup("projects-path"))
 	if err != nil {
 		return nil, err
 	}
@@ -75,9 +75,9 @@ func preStart(c *cobra.Command, args []string) error {
 }
 
 func start(c *cobra.Command, args []string) error {
-	srcPath := viper.GetString("src-path")
+	srcPath := viper.GetString("projects-path")
 	if len(srcPath) == 0 {
-		return internal.NewErrorf(internal.ErrorCodeInvalidArgument, "Please set GIT_GET_SRC_PATH or use `--src-path` flag")
+		return internal.NewErrorf(internal.ErrorCodeInvalidArgument, "Please set GIT_GET_PROJECTS_PATH or use `--projects-path` flag")
 	}
 
 	r, err := project.New(args[0], srcPath)
