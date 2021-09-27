@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/spf13/cobra"
@@ -22,7 +21,7 @@ func initConfig() {
 
 // NewRootCmd create new rootCmd
 func NewRootCmd() (*cobra.Command, error) {
-	rootCmd := &cobra.Command{
+	c := &cobra.Command{
 		Use:           "git-get <repo>",
 		Short:         "git-get",
 		SilenceErrors: true,
@@ -31,66 +30,51 @@ func NewRootCmd() (*cobra.Command, error) {
 		RunE:          start,
 	}
 
-	rootCmd.PersistentFlags().String("projects-path", "", "source directory path")
-	err := viper.BindPFlag("projects-path", rootCmd.PersistentFlags().Lookup("projects-path"))
+	c.PersistentFlags().String("projects-path", "", "projects directory path")
+	err := viper.BindPFlag("projects-path", c.PersistentFlags().Lookup("projects-path"))
 	if err != nil {
 		return nil, err
 	}
 
-	rootCmd.PersistentFlags().String("log-level", "info", "log level (debug, info, warn, error, fatal, panic)")
-	err = viper.BindPFlag("log-level", rootCmd.PersistentFlags().Lookup("log-level"))
-	if err != nil {
-		return nil, err
-	}
-
-	rootCmd.PersistentFlags().Bool("debug", false, "run in debug mode")
-	err = viper.BindPFlag("debug", rootCmd.PersistentFlags().Lookup("debug"))
-	if err != nil {
-		return nil, err
-	}
-
-	return rootCmd, nil
+	return c, nil
 }
 
-// Execute adds all child commands to the root command and sets flags appropriately.
+// Execute adds all child commands to the root command
+// and sets flags appropriately.
 func Execute() error {
-	rootCmd, err := NewRootCmd()
+	c, err := NewRootCmd()
 	if err != nil {
 		return err
 	}
 
 	cobra.OnInitialize(initConfig)
-	return rootCmd.Execute()
+	return c.Execute()
 }
 
 func preStart(c *cobra.Command, args []string) error {
 	if len(args) < 1 {
-		return internal.NewErrorf(internal.ErrorCodeInvalidArgument, "the <repo> argument is required")
+		return internal.NewErrorf(internal.ErrorMissingArgument, "the <repo> argument is required")
 	}
 
 	if len(args) > 1 {
-		return internal.NewErrorf(internal.ErrorCodeInvalidArgument, "the <repo> argument is required")
+		return internal.NewErrorf(internal.ErrorMissingArgument, "the <repo> argument is required")
 	}
 	return nil
 }
 
 func start(c *cobra.Command, args []string) error {
-	srcPath := viper.GetString("projects-path")
-	if len(srcPath) == 0 {
-		return internal.NewErrorf(internal.ErrorCodeInvalidArgument, "Please set GIT_GET_PROJECTS_PATH or use `--projects-path` flag")
+	path := viper.GetString("projects-path")
+	if len(path) == 0 {
+		return internal.NewErrorf(
+			internal.ErrorMissingArgument,
+			"please set GIT_GET_PROJECTS_PATH or use `--projects-path` flag",
+		)
 	}
 
-	r, err := project.New(args[0], srcPath)
+	p, err := project.New(args[0], path)
 	if err != nil {
 		return err
 	}
 
-	git := wrapper.NewGitWrapper()
-	out, err := git.Clone(r)
-	if err != nil {
-		return err
-	}
-
-	fmt.Println(out)
-	return nil
+	return wrapper.NewGitWrapper().Clone(p)
 }

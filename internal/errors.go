@@ -9,19 +9,25 @@ import (
 type Error struct {
 	orig error
 	msg  string
-	code uint
+	code ErrorCode
 }
 
 // ErrorCode defines supported error codes.
 type ErrorCode uint
 
+// Error codes is also used as exit code
+// Must always start at 1
 const (
-	ErrorCodeUnknown         = 1 // error code is also used as exit code
-	ErrorCodeInvalidArgument = 2
+	// ErrorCodeUnknown represents an unknown error
+	ErrorCodeUnknown ErrorCode = iota + 1
+	// ErrorCodeInvalidArgument represents an invalid argument error
+	ErrorCodeInvalidArgument
+	// ErrorMissingArgument represents an missing argument error
+	ErrorMissingArgument
 )
 
 // WrapErrorf returns a wrapped error.
-func WrapErrorf(orig error, code uint, format string, a ...interface{}) error {
+func WrapErrorf(orig error, code ErrorCode, format string, a ...interface{}) error {
 	return &Error{
 		code: code,
 		orig: orig,
@@ -30,7 +36,7 @@ func WrapErrorf(orig error, code uint, format string, a ...interface{}) error {
 }
 
 // NewErrorf instantiates a new error.
-func NewErrorf(code uint, format string, a ...interface{}) error {
+func NewErrorf(code ErrorCode, format string, a ...interface{}) error {
 	return WrapErrorf(nil, code, format, a...)
 }
 
@@ -49,6 +55,6 @@ func (e *Error) Unwrap() error {
 }
 
 // Code returns the code representing this error.
-func (e *Error) Code() uint {
+func (e *Error) Code() ErrorCode {
 	return e.code
 }

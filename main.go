@@ -11,7 +11,7 @@ import (
 
 func main() {
 	if err := cmd.Execute(); err != nil {
-		fmt.Println(err)
+		fmt.Printf("error: %s\n", err)
 		var ee *internal.Error
 		if errors.As(err, &ee) {
 			os.Exit(int(ee.Code()))

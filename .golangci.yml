@@ -24,6 +24,9 @@ linters-settings:
     simplify: true
   golint:
     min-confidence: 0.8
+  gosec:
+    excludes:
+      - G204
   govet:
     check-shadowing: false
     use-installed-packages: false
