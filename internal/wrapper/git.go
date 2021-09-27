@@ -20,7 +20,7 @@ type gitCmd struct {
 	cmdExecutor types.Executor
 }
 
-// Option is an option for New server.
+// Option is an option for New git wrapper.
 type Option func(*gitCmd)
 
 // WithCmdExecutor set git-wrapper executor
