@@ -71,4 +71,3 @@ brews:
     homepage: https://github.com/pixelfactoryio/git-get
     description: "Clone git repository in $GIT_GET_PROJECTS_PATH and preserves <githost>/<username>/<repository> structure."
     license: "MIT"
-    skip_upload: auto
