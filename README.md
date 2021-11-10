@@ -7,7 +7,7 @@ Clone git repository in $GIT_GET_PROJECTS_PATH and preserves `<githost>/<usernam
 ### Homebrew
 
 ```bash
-brew install brew install pixelfactoryio/tools/git-get
+brew install pixelfactoryio/tools/git-get
 ```
 
 ### Usage
@@ -26,7 +26,7 @@ Resolving deltas: 100% (26/26), done.
 
 ### Directory structure
 
-git-get will parse the repository URL and will create the following directory structure using `$GIT_GET_PROJECTS_PATH` as root.
+git-get will parse the repository URL and will create the following directory structure using `$GIT_GET_PROJECTS_PATH` as root directory.
 
 ```bash
 .
