@@ -93,9 +93,10 @@ func isEmptyDirOrNotExist(name string) (found bool, err error) {
 		}
 		return false, err
 	}
-	defer func() {
-		err = f.Close()
-	}()
+
+	if err = f.Close(); err != nil {
+		return true, err
+	}
 
 	_, err = f.Readdirnames(1) // Or f.Readdir(1)
 	if err == io.EOF {
