@@ -1,3 +1,4 @@
+// Package project is used to handle project
 package project
 
 import (
@@ -9,13 +10,11 @@ import (
 
 	giturls "github.com/whilp/git-urls"
 
-	"github.com/pixelfactoryio/git-get/internal"
+	internalErrors "github.com/pixelfactoryio/git-get/internal/errors"
 )
 
-var (
-	gitURLRe = regexp.MustCompile(
-		`(?m)(?:^git|^ssh|^https?|^git\+ssh|^git@[-\w.]+):(\/\/)?(.*?)(\.git)(\/?|\#[-\d\w._]+?)$`,
-	)
+var gitURLRe = regexp.MustCompile(
+	`(?m)(?:^git|^ssh|^https?|^git\+ssh|^git@[-\w.]+):(\/\/)?(.*?)(\.git)(\/?|\#[-\d\w._]+?)$`,
 )
 
 // Cloner interface
@@ -34,7 +33,6 @@ type Project struct {
 
 // New creates a new project Repo using the given url
 func New(rawRepoURL string, srcPath string) (*Project, error) {
-
 	ok, err := isValidGitURL(rawRepoURL)
 	if !ok {
 		return nil, err
@@ -42,7 +40,7 @@ func New(rawRepoURL string, srcPath string) (*Project, error) {
 
 	u, err := giturls.Parse(rawRepoURL)
 	if err != nil {
-		return nil, internal.WrapErrorf(err, internal.ErrorCodeInvalidArgument, "unable to parse URL")
+		return nil, internalErrors.WrapErrorf(err, internalErrors.ErrorCodeInvalidArgument, "unable to parse URL")
 	}
 
 	basename := path.Base(u.Path)
@@ -64,8 +62,8 @@ func New(rawRepoURL string, srcPath string) (*Project, error) {
 func isValidGitURL(rawRepoURL string) (bool, error) {
 	match := gitURLRe.FindAllString(rawRepoURL, -1)
 	if len(match) == 0 {
-		return false, internal.NewErrorf(
-			internal.ErrorCodeInvalidArgument,
+		return false, internalErrors.NewErrorf(
+			internalErrors.ErrorCodeInvalidArgument,
 			fmt.Sprintf("invalid URL scheme: %s", rawRepoURL),
 		)
 	}

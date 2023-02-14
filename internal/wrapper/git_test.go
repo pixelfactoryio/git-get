@@ -3,7 +3,6 @@ package wrapper_test
 import (
 	"context"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"os/exec"
 	"strings"
@@ -53,12 +52,12 @@ func Test_Clone_DirExists(t *testing.T) {
 
 	srcPath := t.TempDir()
 	fullProjectPath := fmt.Sprintf("%s/githost.com/path/to/repo", srcPath)
-	err := os.MkdirAll(fullProjectPath, 0755) //nolint:gosec
+	err := os.MkdirAll(fullProjectPath, 0o755) //nolint:gosec
 	if err != nil {
 		t.Error(err)
 	}
 
-	err = ioutil.WriteFile(fmt.Sprintf("%s/test.txt", fullProjectPath), []byte("test file"), 0755) //nolint:gosec
+	err = os.WriteFile(fmt.Sprintf("%s/test.txt", fullProjectPath), []byte("test file"), 0o755) //nolint:gosec
 	if err != nil {
 		t.Error(err)
 	}
