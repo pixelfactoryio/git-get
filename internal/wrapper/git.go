@@ -1,3 +1,4 @@
+// Package wrapper is used to wrap git commands
 package wrapper
 
 import (
@@ -12,7 +13,7 @@ import (
 	"github.com/ldez/go-git-cmd-wrapper/v2/git"
 	"github.com/ldez/go-git-cmd-wrapper/v2/types"
 
-	"github.com/pixelfactoryio/git-get/internal"
+	internalErrors "github.com/pixelfactoryio/git-get/internal/errors"
 	"github.com/pixelfactoryio/git-get/internal/project"
 )
 
@@ -61,10 +62,12 @@ func NewGitWrapper(opts ...Option) project.Cloner {
 func (g *gitCmd) Clone(r *project.Project) error {
 	empty, err := isEmptyDirOrNotExist(r.FullPath)
 	if err != nil || !empty {
-		return internal.NewErrorf(internal.ErrorCodeInvalidArgument, "destination path %s is not empty", r.FullPath)
+		return internalErrors.NewErrorf(
+			internalErrors.ErrorCodeInvalidArgument, "destination path %s is not empty", r.FullPath,
+		)
 	}
 
-	err = os.MkdirAll(r.FullPath, 0755) //nolint:gosec
+	err = os.MkdirAll(r.FullPath, 0o755) //nolint:gosec
 	if err != nil {
 		return err
 	}
@@ -75,10 +78,10 @@ func (g *gitCmd) Clone(r *project.Project) error {
 	if err != nil {
 		var ee *exec.ExitError
 		if errors.As(err, &ee) {
-			return internal.NewErrorf(internal.ErrorCode(ee.ExitCode()), "git client returned error")
+			return internalErrors.NewErrorf(internalErrors.ErrorCode(ee.ExitCode()), "git client returned error")
 		}
 
-		return internal.WrapErrorf(err, internal.ErrorCodeUnknown, "git client returned error")
+		return internalErrors.WrapErrorf(err, internalErrors.ErrorCodeUnknown, "git client returned error")
 	}
 
 	return nil

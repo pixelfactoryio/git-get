@@ -1,4 +1,5 @@
-package internal
+// Package errors defines this program custom errors
+package errors
 
 import (
 	"fmt"

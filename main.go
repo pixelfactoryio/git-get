@@ -1,3 +1,4 @@
+// Package main is the main entrypoint of this program
 package main
 
 import (
@@ -6,13 +7,13 @@ import (
 	"os"
 
 	"github.com/pixelfactoryio/git-get/cmd"
-	"github.com/pixelfactoryio/git-get/internal"
+	internalErrors "github.com/pixelfactoryio/git-get/internal/errors"
 )
 
 func main() {
 	if err := cmd.Execute(); err != nil {
 		fmt.Printf("error: %s\n", err)
-		var ee *internal.Error
+		var ee *internalErrors.Error
 		if errors.As(err, &ee) {
 			os.Exit(int(ee.Code()))
 		}

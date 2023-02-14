@@ -1,3 +1,4 @@
+// Package cmd defines the program command line interface
 package cmd
 
 import (
@@ -7,7 +8,7 @@ import (
 	"github.com/spf13/viper"
 	"go.pixelfactory.io/pkg/version"
 
-	"github.com/pixelfactoryio/git-get/internal"
+	internalErrors "github.com/pixelfactoryio/git-get/internal/errors"
 	"github.com/pixelfactoryio/git-get/internal/project"
 	"github.com/pixelfactoryio/git-get/internal/wrapper"
 )
@@ -53,11 +54,11 @@ func Execute() error {
 
 func preStart(c *cobra.Command, args []string) error {
 	if len(args) < 1 {
-		return internal.NewErrorf(internal.ErrorMissingArgument, "the <repo> argument is required")
+		return internalErrors.NewErrorf(internalErrors.ErrorMissingArgument, "the <repo> argument is required")
 	}
 
 	if len(args) > 1 {
-		return internal.NewErrorf(internal.ErrorMissingArgument, "the <repo> argument is required")
+		return internalErrors.NewErrorf(internalErrors.ErrorMissingArgument, "the <repo> argument is required")
 	}
 	return nil
 }
@@ -65,8 +66,8 @@ func preStart(c *cobra.Command, args []string) error {
 func start(c *cobra.Command, args []string) error {
 	path := viper.GetString("projects-path")
 	if len(path) == 0 {
-		return internal.NewErrorf(
-			internal.ErrorMissingArgument,
+		return internalErrors.NewErrorf(
+			internalErrors.ErrorMissingArgument,
 			"please set GIT_GET_PROJECTS_PATH or use `--projects-path` flag",
 		)
 	}

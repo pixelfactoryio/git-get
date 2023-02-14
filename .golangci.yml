@@ -48,7 +48,6 @@ linters-settings:
 
 linters:
   enable:
-    - deadcode
     - errcheck
     - gas
     - gochecknoinits
@@ -64,11 +63,9 @@ linters:
     - nakedret
     - revive
     - staticcheck
-    - structcheck
     - typecheck
     - unconvert
     - unused
-    - varcheck
   enable-all: false
   disable:
     - depguard
